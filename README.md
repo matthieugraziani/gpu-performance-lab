@@ -3,10 +3,10 @@
 Ce projet fournit des notebooks permettant de mesurer les performances de calcul (en TFLOPS) sur CPU et GPU à l’aide d’opérations de multiplication de matrices avec différentes précisions (float16, float32, float64).
 
 ## 📌 Objectifs
-Évaluer les performances réelles du matériel
-Comparer différentes précisions numériques
-Mesurer l’écart avec les performances théoriques
-Visualiser la stabilité et l’efficacité des calculs
+- Évaluer les performances réelles du matériel
+- Comparer différentes précisions numériques
+- Mesurer l’écart avec les performances théoriques
+- Visualiser la stabilité et l’efficacité des calculs
 
 ## 📂 Structure du projet
 ~~~bash
