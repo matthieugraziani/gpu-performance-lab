@@ -1,4 +1,11 @@
-# 🚀 Benchmark CPU & GPU (PyTorch)
+# <p align="center"> 🚀 Benchmark CPU & GPU (PyTorch)</p>
+
+
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![CUDA](https://img.shields.io/badge/CUDA-Enabled-green)
+![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)
+![License](https://img.shields.io/badge/license-MIT-orange)
+
 
 Ce projet fournit des notebooks permettant de mesurer les performances de calcul (en TFLOPS) sur CPU et GPU à l’aide d’opérations de multiplication de matrices avec différentes précisions (float16, float32, float64).
 
