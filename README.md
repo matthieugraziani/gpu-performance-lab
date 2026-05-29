@@ -32,7 +32,7 @@ Ce projet fournit des notebooks permettant de mesurer les performances de calcul
 ├── data/
 │   ├── cpu_benchmark_results.json    # Résultats CPU exportés automatiquement
 │   └── gpu_benchmark_results.json    # Résultats GPU exportés automatiquement
-├── assets/
+├── src/
 │   ├── cpu_benchmark_result.png      # Graphique CPU
 │   ├── benchmark_result_float16.png  # Graphique GPU FP16
 │   ├── benchmark_result_float32.png  # Graphique GPU FP32
@@ -75,19 +75,19 @@ Le benchmark repose sur :
 
 ### 🖥️ CPU Benchmark
 
-![CPU Benchmark](assets/cpu_benchmark_result.png)
+![CPU Benchmark](src/cpu_benchmark_result.png)
 
 ### 🚀 GPU Benchmark — FP16
 
-![GPU FP16](assets/benchmark_result_float16.png)
+![GPU FP16](src/benchmark_result_float16.png)
 
 ### 🚀 GPU Benchmark — FP32
 
-![GPU FP32](assets/benchmark_result_float32.png)
+![GPU FP32](src/benchmark_result_float32.png)
 
 ### 🚀 GPU Benchmark — FP64
 
-![GPU FP64](assets/benchmark_result_float64.png)
+![GPU FP64](src/benchmark_result_float64.png)
 
 ---
 
@@ -143,7 +143,7 @@ notebooks/CPU_Benchmark.ipynb
 notebooks/GPU_Benchmark.ipynb
 ```
 
-Les fichiers JSON et les graphiques PNG sont générés automatiquement dans `data/` et `assets/`.
+Les fichiers JSON et les graphiques PNG sont générés automatiquement dans `data/` et `src/`.
 
 ### 3. Lancer le dashboard
 
