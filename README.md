@@ -106,7 +106,7 @@ Ces fichiers sont directement consommés par le **dashboard Streamlit**.
 
 ## 📈 Dashboard interactif
 
-Le fichier `dashboard.py` propose un dashboard complet basé sur **Streamlit + Plotly** :
+Le fichier `app.py` propose un dashboard complet basé sur **Streamlit + Plotly** :
 
 - **Onglet CPU** : GFLOPS/itération, scaling multi-thread, temps par itération, infos système
 - **Onglet GPU** : TFLOPS par dtype, jauges d'efficacité vs pic théorique, infos GPU
@@ -115,7 +115,7 @@ Le fichier `dashboard.py` propose un dashboard complet basé sur **Streamlit + P
 ### Lancer le dashboard
 
 ```bash
-streamlit run dashboard.py
+streamlit run app.py
 ```
 
 > ⚠️ Les fichiers `data/cpu_benchmark_results.json` et `data/gpu_benchmark_results.json` doivent exister (générés par les notebooks).
@@ -148,7 +148,7 @@ Les fichiers JSON et les graphiques PNG sont générés automatiquement dans `da
 ### 3. Lancer le dashboard
 
 ```bash
-streamlit run dashboard.py
+streamlit run app.py
 ```
 
 ---
