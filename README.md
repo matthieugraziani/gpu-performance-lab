@@ -1,115 +1,204 @@
 # <p align="center"> 🚀 Benchmark CPU & GPU (PyTorch)</p>
 
+<p align="center">
+  <img src="https://img.shields.io/badge/Python-3.11-blue"/>
+  <img src="https://img.shields.io/badge/CUDA-Enabled-green"/>
+  <img src="https://img.shields.io/badge/PyTorch-2.x-red"/>
+  <img src="https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b"/>
+  <img src="https://img.shields.io/badge/license-MIT-orange"/>
+</p>
 
-![Python](https://img.shields.io/badge/Python-3.11-blue)
-![CUDA](https://img.shields.io/badge/CUDA-Enabled-green)
-![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red)
-![License](https://img.shields.io/badge/license-MIT-orange)
+Ce projet fournit des notebooks permettant de mesurer les performances de calcul (en GFLOPS / TFLOPS) sur CPU et GPU à l'aide d'opérations de multiplication de matrices avec différentes précisions (float16, float32, float64), ainsi qu'un **dashboard interactif Streamlit** pour visualiser les résultats.
 
-
-Ce projet fournit des notebooks permettant de mesurer les performances de calcul (en TFLOPS) sur CPU et GPU à l’aide d’opérations de multiplication de matrices avec différentes précisions (float16, float32, float64).
+---
 
 ## 📌 Objectifs
+
 - Évaluer les performances réelles du matériel
-- Comparer différentes précisions numériques
-- Mesurer l’écart avec les performances théoriques
-- Visualiser la stabilité et l’efficacité des calculs
+- Comparer différentes précisions numériques (FP16, FP32, FP64)
+- Mesurer l'écart avec les performances théoriques
+- Visualiser la stabilité et l'efficacité des calculs
+- Exporter les résultats en JSON pour les exploiter dans un dashboard
+
+---
 
 ## 📂 Structure du projet
-~~~bash
+
+```
 .
-├── CPU_Benchmark.ipynb   # Benchmark CPU
-├── GPU_Benchmark.ipynb   # Benchmark GPU (PyTorch + CUDA)
-├── requirements.txt      # Librairies python
+├── notebooks/
+│   ├── CPU_Benchmark.ipynb           # Benchmark CPU (GFLOPS, scaling multi-thread)
+│   └── GPU_Benchmark.ipynb           # Benchmark GPU (TFLOPS, FP16/FP32/FP64)
+├── data/
+│   ├── cpu_benchmark_results.json    # Résultats CPU exportés automatiquement
+│   └── gpu_benchmark_results.json    # Résultats GPU exportés automatiquement
+├── assets/
+│   ├── cpu_benchmark_result.png      # Graphique CPU
+│   ├── benchmark_result_float16.png  # Graphique GPU FP16
+│   ├── benchmark_result_float32.png  # Graphique GPU FP32
+│   └── benchmark_result_float64.png  # Graphique GPU FP64
+├── app.py                            # Dashboard interactif Streamlit
+├── requirements.txt
 └── README.md
-~~~
+```
+
+> Les dossiers `data/` et `assets/` sont créés **automatiquement** à l'exécution des notebooks.
+
+---
 
 ## ⚙️ Méthodologie
 
 Le benchmark repose sur :
 
-- Multiplications de matrices carrées (N x N)
-- Plusieurs itérations pour mesurer la stabilité
+- Multiplications de matrices carrées (N × N)
+- Plusieurs itérations de chauffe (*warmup*) puis de mesure
 - Calcul des métriques suivantes :
-    - TFLOPS par itération
-    - TFLOPS moyen
-    - TFLOPS stabilisé
-    - TFLOPS peak
-  
+  - GFLOPS / TFLOPS par itération
+  - Moyenne globale
+  - Moyenne stabilisée (iter 2+, warmup exclu)
+  - Peak mesuré
+- Scaling multi-thread (CPU uniquement)
+
+---
+
 ## 🧪 Précisions testées
-- torch.float16 (FP16)
-- torch.float32 (FP32 / TF32 sur GPU)
-- torch.float64 (FP64)
 
-## 📊 Résultats
+| Précision | CPU | GPU |
+|---|---|---|
+| `torch.float32` (FP32) | ✅ | ✅ (TF32 via Tensor Cores) |
+| `torch.float64` (FP64) | ✅ | ✅ (limité sur GPU grand public) |
+| `torch.float16` (FP16) | — | ✅ (Tensor Cores) |
 
-Chaque benchmark génère un graphique contenant :
+---
 
-- TFLOPS par itération (barres)
-- Moyenne globale
-- Moyenne stabilisée
-- Peak mesuré
-- Pic théorique (si disponible)
-- Efficacité (% du pic théorique)
+## 📊 Résultats — Screenshots
 
-Exemple de sortie :
-~~~bash
-benchmark_result_float32.png
-~~~
+### 🖥️ CPU Benchmark
+
+![CPU Benchmark](assets/cpu_benchmark_result.png)
+
+### 🚀 GPU Benchmark — FP16
+
+![GPU FP16](assets/benchmark_result_float16.png)
+
+### 🚀 GPU Benchmark — FP32
+
+![GPU FP32](assets/benchmark_result_float32.png)
+
+### 🚀 GPU Benchmark — FP64
+
+![GPU FP64](assets/benchmark_result_float64.png)
+
+---
+
+## 📡 Export des résultats
+
+À la fin de chaque notebook, une cellule exporte automatiquement les résultats en JSON :
+
+```
+data/cpu_benchmark_results.json   →  gflops_history, thread_results, stats CPU…
+data/gpu_benchmark_results.json   →  tflops_history par dtype, stats GPU…
+```
+
+Ces fichiers sont directement consommés par le **dashboard Streamlit**.
+
+---
+
+## 📈 Dashboard interactif
+
+Le fichier `dashboard.py` propose un dashboard complet basé sur **Streamlit + Plotly** :
+
+- **Onglet CPU** : GFLOPS/itération, scaling multi-thread, temps par itération, infos système
+- **Onglet GPU** : TFLOPS par dtype, jauges d'efficacité vs pic théorique, infos GPU
+- **Onglet Comparaison** : bar chart CPU vs GPU, radar chart, tableau de speedup
+
+### Lancer le dashboard
+
+```bash
+streamlit run dashboard.py
+```
+
+> ⚠️ Les fichiers `data/cpu_benchmark_results.json` et `data/gpu_benchmark_results.json` doivent exister (générés par les notebooks).
+
+---
+
+## ▶️ Utilisation complète
+
+### 1. Installer les dépendances
+
+```bash
+pip install torch matplotlib streamlit plotly pandas
+```
+
+### 2. Exécuter les notebooks
+
+```bash
+jupyter notebook
+```
+
+Ouvrir et exécuter dans l'ordre :
+
+```
+notebooks/CPU_Benchmark.ipynb
+notebooks/GPU_Benchmark.ipynb
+```
+
+Les fichiers JSON et les graphiques PNG sont générés automatiquement dans `data/` et `assets/`.
+
+### 3. Lancer le dashboard
+
+```bash
+streamlit run dashboard.py
+```
+
+---
 
 ## 🧠 Interprétation
-- FP16 / FP32 (Tensor Cores) :
-Très hautes performances sur GPU moderne
-- FP64 :
-Performances fortement limitées sur GPU grand public
-- Efficacité :
-Permet de mesurer l’optimisation réelle vs capacité théorique
+
+- **FP16 / FP32 (Tensor Cores)** : très hautes performances sur GPU moderne grâce aux Tensor Cores
+- **FP64** : performances fortement limitées sur GPU grand public (1/32 à 1/64 du FP32)
+- **Efficacité** : mesure l'optimisation réelle vs la capacité théorique constructeur
+- **Stable mean** : exclut la 1ère itération (cold start) pour une mesure plus fiable
+
+---
+
 ## 🖥️ GPU cible (exemple)
 
-Le notebook GPU inclut des références pour des cartes comme :
-- RTX 40xx (architecture Ada Lovelace)
+Le notebook GPU inclut des références pour :
 
-Exemple de pics théoriques :
-- FP16 / TF32 : ~641 TFLOPS
-- FP64 : ~1–2 TFLOPS
+- **RTX 40xx** (architecture Ada Lovelace)
 
-## ▶️ Utilisation
-1. Installer les dépendances
-~~~bash
-pip install torch matplotlib
-~~~
-2. Lancer les notebooks
-~~~bash
-jupyter notebook
-~~~
-Puis ouvrir :
-~~~bash 
-CPU_Benchmark.ipynb 
-~~~
-~~~bash
-GPU_Benchmark.ipynb
-~~~
+Pics théoriques (RTX 4070 Ti) :
+
+| Précision | Théorique |
+|---|---|
+| FP16 / TF32 | ~641 TFLOPS |
+| FP64 | ~1.2 TFLOPS |
+
+---
 
 ## 📈 Personnalisation
 
-Tu peux modifier :
+Tu peux modifier dans les notebooks :
 
-- Taille des matrices (matrix_size)
-- Nombre d’itérations
-- Type de données (dtype)
-- Activation de TF32 (torch.backends.cuda.matmul.allow_tf32)
-  
+| Paramètre | Description |
+|---|---|
+| `MATRIX_SIZE` | Taille des matrices N×N |
+| `BENCH_ITERS` | Nombre d'itérations de mesure |
+| `WARMUP_ITERS` | Nombre d'itérations de chauffe |
+| `DTYPE` | Type de données (CPU) |
+| `allow_tf32` | Activation de TF32 (GPU) |
+
+---
+
 ## ⚠️ Notes
-- Les performances dépendent fortement :
-    - du matériel
-    - de la charge système
-    - des optimisations CUDA
+
+- Les performances dépendent fortement du matériel, de la charge système et des optimisations CUDA
 - Les premières itérations peuvent être moins représentatives (warmup)
-## 📌 Idées d’amélioration
-- Benchmark multi-GPU
-- Support CPU multi-thread avancé
-- Export CSV / JSON des résultats
-- Dashboard interactif (Plotly / Streamlit)
+- Le dashboard lit les pics théoriques GPU depuis la barre latérale (modifiables selon ta carte)
+
+---
+
 ## 📜 Licence
 
-Projet libre d’utilisation pour tests et recherche.
+Projet libre d'utilisation pour tests et recherche.
