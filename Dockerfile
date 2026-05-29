@@ -1,6 +1,6 @@
 # ── Base image ────────────────────────────────────────────────────────────────
 # PyTorch avec support CUDA (compatible RTX 40xx / Ada Lovelace)
-FROM pytorch/pytorch:2.2.0-cuda12.1-cudnn8-runtime
+FROM pytorch/pytorch:2.2.0-cuda12.9-cudnn9.3-runtime
 
 # ── Metadata ──────────────────────────────────────────────────────────────────
 LABEL maintainer="benchmark"
