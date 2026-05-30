@@ -5,6 +5,7 @@
   <img src="https://img.shields.io/badge/CUDA-Enabled-green"/>
   <img src="https://img.shields.io/badge/PyTorch-2.x-red"/>
   <img src="https://img.shields.io/badge/Streamlit-Dashboard-ff4b4b"/>
+  <img src="https://img.shields.io/badge/Docker-Ready-2496ED"/>
   <img src="https://img.shields.io/badge/license-MIT-orange"/>
 </p>
 
@@ -27,22 +28,24 @@ Ce projet fournit des notebooks permettant de mesurer les performances de calcul
 ```
 .
 ├── notebooks/
-│   ├── CPU_Benchmark.ipynb           # Benchmark CPU (GFLOPS, scaling multi-thread)
-│   └── GPU_Benchmark.ipynb           # Benchmark GPU (TFLOPS, FP16/FP32/FP64)
-├── data/
-│   ├── cpu_benchmark_results.json    # Résultats CPU exportés automatiquement
-│   └── gpu_benchmark_results.json    # Résultats GPU exportés automatiquement
-├── src/
-│   ├── cpu_benchmark_result.png      # Graphique CPU
-│   ├── benchmark_result_float16.png  # Graphique GPU FP16
-│   ├── benchmark_result_float32.png  # Graphique GPU FP32
-│   └── benchmark_result_float64.png  # Graphique GPU FP64
-├── app.py                            # Dashboard interactif Streamlit
-├── requirements.txt
+│   ├── CPU_Benchmark.ipynb         # Benchmark CPU (GFLOPS, scaling multi-thread)
+│   └── GPU_Benchmark.ipynb         # Benchmark GPU (TFLOPS, FP16/FP32/FP64)
+├── data/                           # Généré automatiquement
+│   ├── cpu_benchmark_results.json
+│   └── gpu_benchmark_results.json
+├── src/                            # Généré automatiquement
+│   ├── cpu_benchmark_result.png
+│   ├── benchmark_result_float16.png
+│   ├── benchmark_result_float32.png
+│   └── benchmark_result_float64.png
+├── app.py                          # Dashboard interactif Streamlit
+├── Dockerfile
+├── .gitignore
+├── pyproject.toml
 └── README.md
 ```
 
-> Les dossiers `data/` et `assets/` sont créés **automatiquement** à l'exécution des notebooks.
+> Les dossiers `data/` et `src/` sont créés **automatiquement** à l'exécution des notebooks.
 
 ---
 
@@ -122,12 +125,12 @@ streamlit run app.py
 
 ---
 
-## ▶️ Utilisation complète
+## ▶️ Utilisation — Installation locale
 
 ### 1. Installer les dépendances
 
 ```bash
-pip install torch matplotlib streamlit plotly pandas
+pip install .
 ```
 
 ### 2. Exécuter les notebooks
@@ -150,6 +153,44 @@ Les fichiers JSON et les graphiques PNG sont générés automatiquement dans `da
 ```bash
 streamlit run app.py
 ```
+
+---
+
+## 🐳 Utilisation — Docker
+
+### Build de l'image
+
+```bash
+docker build -t benchmark .
+```
+
+### Lancer le dashboard
+
+```bash
+docker run --gpus all -p 8501:8501 benchmark
+```
+
+Puis ouvrir [http://localhost:8501](http://localhost:8501) dans le navigateur.
+
+### Exécuter les notebooks (génère JSON + PNG)
+
+```bash
+# CPU
+docker run --gpus all \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/src:/app/src \
+  benchmark \
+  jupyter nbconvert --to notebook --execute notebooks/CPU_Benchmark.ipynb
+
+# GPU
+docker run --gpus all \
+  -v $(pwd)/data:/app/data \
+  -v $(pwd)/src:/app/src \
+  benchmark \
+  jupyter nbconvert --to notebook --execute notebooks/GPU_Benchmark.ipynb
+```
+
+> Les dossiers `data/` et `src/` sont montés en volume pour récupérer les fichiers générés sur la machine hôte.
 
 ---
 

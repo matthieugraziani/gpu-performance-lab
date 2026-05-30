@@ -15,15 +15,15 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 WORKDIR /app
 
 # ── Dépendances Python ────────────────────────────────────────────────────────
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+COPY pyproject.toml .
+RUN pip install --no-cache-dir .
 
 # ── Copie du projet ───────────────────────────────────────────────────────────
 COPY notebooks/ ./notebooks/
 COPY app.py .
 
 # ── Création des dossiers de sortie ──────────────────────────────────────────
-RUN mkdir -p data assets
+RUN mkdir -p data src
 
 # ── Port Streamlit ────────────────────────────────────────────────────────────
 EXPOSE 8501

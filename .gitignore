@@ -25,7 +25,7 @@ notebooks/.ipynb_checkpoints/
 
 # ── Benchmark outputs ─────────────────────────────────────────────────────────
 data/
-assets/
+src/
 
 # ── Streamlit ─────────────────────────────────────────────────────────────────
 .streamlit/
